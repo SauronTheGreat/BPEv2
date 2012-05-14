@@ -1,0 +1,33 @@
+
+<%= form_for(@building, :html => { :class => "submit_on_change"}) do |f| %>
+
+    <h1>Add a Property</h1>
+    <br>
+    <div class="content">
+      <h2>Building</h2>
+        <%= select_tag :selected_building, options_from_collection_for_select(@buildings, 'id','full_name'), {:class=>'autosubmit'} %>
+      <br>
+      Not in the list?
+      <a data-backdrop="static" data-toggle="modal" href="#add_building">Add it!</a>
+
+      <div class="modal hide fade" id="add_building">
+        <div class="modal-header">
+          <a class="close" data-dismiss="modal">×</a>
+
+          <h3>Add it!</h3>
+        </div>
+        <div class="modal-body">
+          Building Name : <%= f.text_field :name, :value=>nil %>
+          <%= f.fields_for :locations do |location| %>
+              <%= location.select :locality_id, options_from_collection_for_select(@localities, 'id', 'name') %>
+              <%= location.hidden_field :primary, :value=>true %>
+          <% end %>
+        </div>
+        <div class="modal-footer">
+          <%= f.submit "Save Changes", :class=>"btn btn-primary" %>
+          <a href="#" class="btn btn-danger" data-dismiss="modal">Close</a>
+        </div>
+      </div>
+    </div>
+<% end %>
+

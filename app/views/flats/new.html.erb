@@ -1,0 +1,18 @@
+<%= form_for(@flat) do |f| %>
+
+    <div class="content">
+      <div class="pull-right">
+        <h1>Quick Property Form</h1>
+      </div>
+      <h2>Building: <%= @building.name %>, <%= @building.localities.first.name %></h2>
+      Flat name: <%= f.text_field :name %>
+      <%= f.fields_for :bhk_config do |bhk| %>
+          <%= bhk.select :bhk_id, options_from_collection_for_select(@bhks, 'id', 'name'),{}, {:class=>"span2"} %>
+      <% end %>
+      <%#= f.fields_for :connections do |c| %>
+      <%#= c.select :friend_id, options_from_collection_for_select(@buildings, 'id', 'name') %>
+      <%# end %>
+    </div>
+    <br>
+    <%= f.submit "Save and Proceed", :class => "btn btn-inverse" %>
+<% end %>

@@ -1,0 +1,22 @@
+<%= form_for(@flat) do |f| %>
+
+    <h1>Building : </h1> <%= @flat.building %>
+
+    <div class="field">
+      <%= f.label :name %>
+      <br/>
+      <%= f.text_field :name %>
+    </div>
+    <div class="field">
+      <%= f.fields_for :bhk_config do |bhk| %>
+          <%= bhk.select :bhk_id, options_from_collection_for_select(@bhks, 'id', 'name') %>
+      <% end %>
+    </div>
+    <%#= f.fields_for :connections do |c| %>
+        <%#= c.select :friend_id, options_from_collection_for_select(@buildings, 'id', 'name') %>
+    <%# end %>
+
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+<% end %>

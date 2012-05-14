@@ -1,0 +1,199 @@
+<%= hidden_field_tag :panelling, '0' %>
+
+<%= nested_form_for(@building, :html => {:class => "submit_on_change"}) do |b| %>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#location').click(function () {
+                if ($('#panelling').val() == '0') {
+                    $('.center-frame').animate({
+                        marginTop:'-540'
+                    }, 500);
+                    $('#main-submit').hide();
+                    $('#alt-submit').show();
+                }
+                $('#detail_panel').html('<%= render("location", :b=>b) %>');
+                $('#panelling').val('1');
+            });
+            $('#building').click(function () {
+                if ($('#panelling').val() == '0') {
+                    $('.center-frame').animate({
+                        marginTop:'-540'
+                    }, 500);
+                    $('#main-submit').hide();
+                    $('#alt-submit').show();
+                }
+                $('#detail_panel').html('<%= render "building" %>');
+                $('#panelling').val('1');
+            });
+            $('#flat').click(function () {
+                if ($('#panelling').val() == '0') {
+                    $('.center-frame').animate({
+                        marginTop:'-540'
+                    }, 500);
+                    $('#main-submit').hide();
+                    $('#alt-submit').show();
+                }
+                $('#detail_panel').html('<%= render "flat" %>');
+                $('#panelling').val('1');
+            });
+            $('#technicals').click(function () {
+                if ($('#panelling').val() == '0') {
+                    $('.center-frame').animate({
+                        marginTop:'-540'
+                    }, 500);
+                    $('#main-submit').hide();
+                    $('#alt-submit').show();
+                }
+                $('#detail_panel').html('<%= render "technicals" %>');
+                $('#panelling').val('1');
+            });
+            $('#notes').click(function () {
+                if ($('#panelling').val() == '0') {
+                    $('.center-frame').animate({
+                        marginTop:'-540'
+                    }, 500);
+                    $('#main-submit').hide();
+                    $('#alt-submit').show();
+                }
+                $('#detail_panel').html('<%= render "notes" %>');
+                $('#panelling').val('1');
+            });
+        })
+    </script>
+
+    <div class="center-frame">
+      <div class="row-fluid" style="margin-bottom: 10px;height:150px;">
+        <div class="content span5" style="margin-left: -40px;">
+          <% if @building.new_record? %>
+              <h2>Building</h2>
+              <br>
+              <%= select_tag :selected_building, options_from_collection_for_select(@buildings, 'id', 'full_name'), {:include_blank => '', :class => 'autosubmit'} %>
+              <br>
+              Can't find the building you are looking for?
+              <a data-backdrop="static" data-toggle="modal" href="#add_building">Add it!</a>
+          <% else %>
+              <h2>Building: <%= @building.name %>, <%= @building.localities.first.name %></h2>
+          <% end %>
+          <br>
+
+          <div class="modal hide fade" id="add_building">
+            <div class="modal-header">
+              <a class="close" data-dismiss="modal">×</a>
+
+              <h3>Add it!</h3>
+            </div>
+            <div class="modal-body">
+              Building Name : <%= b.text_field :name, :value => nil %>
+              <%= b.fields_for :locations do |location| %>
+                  <%= location.select :locality_id, options_from_collection_for_select(@localities, 'id', 'name') %>
+                  <%= location.hidden_field :primary, :value => true %>
+              <% end %>
+            </div>
+            <div class="modal-footer">
+              <%= b.submit "Save Changes", :class => "btn btn-primary" %>
+              <a href="#" class="btn btn-danger" data-dismiss="modal">Close</a>
+            </div>
+          </div>
+        </div>
+        <div class="span3">
+          <br>
+
+          <h1 style="margin-left: 20px">Add or Edit Property</h1>
+        </div>
+      </div>
+
+      <%= b.fields_for :flats do |f| %>
+          <div class="row-fluid">
+            <div class="content span4" style="margin-left: -40px; height:300px;">
+              <h2>Flat</h2>
+              <br>
+              <table class="table table-condensed">
+                <tr>
+                  <td>Name*:</td>
+                  <td><%= f.text_field :name %></td>
+                </tr>
+                <tr>
+                  <td>
+                    Configuration*:
+                  </td>
+                  <td>
+                    <%= f.fields_for :bhk_config do |bhk| %>
+                        <%= bhk.select :bhk_id, options_from_collection_for_select(@bhks, 'id', 'name'), {:include_blank => ''}, {} %>
+                    <% end %>
+                  </td>
+                </tr>
+                <%= f.fields_for :flat_key_datum do |fkd| %>
+                    <tr>
+                      <td>Source:</td>
+                      <td><%= fkd.select :source_id, options_from_collection_for_select(@sources, 'id', 'name'), {:include_blank => ''} %></td>
+                    </tr>
+                    <tr>
+                      <td>Expected Rent:</td>
+                      <td><%= fkd.text_field :rent %></td>
+                    </tr>
+                    <tr>
+                      <td>Available From:</td>
+                      <td><%= fkd.text_field :available_from %></td>
+                    </tr>
+                    <tr>
+                      <td>Furnishing Status:</td>
+                      <td><%= fkd.select :furnstat_id, options_from_collection_for_select(@furnstats, 'id', 'name'), {:include_blank => ''} %></td>
+                    </tr>
+                <% end %>
+              </table>
+            </div>
+            <div id="connections" class="span8 content" style="height:300px; overflow: auto;">
+              <h2>Related Contacts</h2>
+              <br>
+              <%= f.fields_for :connections do |c| %>
+                  <%= c.select :friend_id, options_from_collection_for_select(@contacts, 'id', 'name') %>
+              <% end %>
+              <%= f.link_to_add 'One More Contact', :connections %> <br/>
+              Can't find the contact you are looking for?
+              <a data-backdrop="static" data-toggle="modal" href="#add_contact">Add it!</a>
+
+              <div class="modal hide fade" id="add_contact">
+                <div class="modal-header">
+                  <a class="close" data-dismiss="modal">×</a>
+
+                  <h3>Add a New Contact</h3>
+                </div>
+                <div class="modal-body">
+                  Name: <%= text_field_tag :contact_name %>
+                  <br>
+                  Phone: <%= text_field_tag :contact_phone %>
+                  <br>
+                  Email: <%= text_field_tag :contact_email %>
+                  <br>
+                </div>
+                <div class="modal-footer">
+                  <%= b.submit "Save Changes", :class => "btn btn-primary" %>
+                  <a href="#" class="btn btn-danger" data-dismiss="modal">Close</a>
+                </div>
+              </div>
+            </div>
+          </div>
+      <% end %>
+    </div>
+    <hr>
+    <div class="row-fluid" style="margin-top: 20px;">
+      <h2><%= b.submit "Save and Exit", :class => "btn btn-primary btn-large pull-right", :id => "main-submit" %></h2>
+
+      <h2><%= b.submit "Save and Return", :class => "btn btn-primary btn-large pull-right", :style => "display:none;", :id => "alt-submit" %></h2>
+
+      <h2>Save and go to:
+        <%= link_to "Location", '#', :class => "btn btn-inverse btn-large", :id => "location" %>
+        <%= link_to "Building", '#', :class => "btn btn-inverse btn-large", :id => "building" %>
+        <%= link_to "Flat", '#', :class => "btn btn-inverse btn-large", :id => "flat" %>
+        <%= link_to "Technicals", '#', :class => "btn btn-inverse btn-large", :id => "technicals" %>
+        <%= link_to "Notes", '#', :class => "btn btn-inverse btn-large", :id => "notes" %>
+        <%= link_to "More Info", '#', :class => "btn btn-inverse btn-large", :id => "info" %>
+        <%= link_to "Photos", '#', :class => "btn btn-inverse btn-large", :id => "photos" %>
+      </h2>
+    </div>
+    <div class="row-fluid" style="margin-top: 20px;">
+      <div class="content" id="detail_panel"></div>
+    </div>
+
+<% end %>

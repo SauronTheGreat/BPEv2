@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  rent: 1
+  furnstat_id: 1
+  available_from: 2012-05-13
+  num: MyString
+  url: MyString
+  source_id: 1
+  floor_area: 1
+
+two:
+  rent: 1
+  furnstat_id: 1
+  available_from: 2012-05-13
+  num: MyString
+  url: MyString
+  source_id: 1
+  floor_area: 1

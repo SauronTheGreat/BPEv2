@@ -1,0 +1,15 @@
+<div class="centered">
+  <%= form_for(@building) do |f| %>
+
+    Select the Building...
+
+    <div class="field">
+      <%= f.label :name %><br />
+      <%= f.text_field :name %>
+    </div>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+  <% end %>
+</div>
+
